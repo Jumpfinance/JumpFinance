@@ -4,7 +4,7 @@ pragma solidity 0.7.6;
 
 contract PriceManager {
     enum PriceType {FIXED, DECLIINING_BY_TIME}
-
+    address public manager;
     struct DecliningPrice {
         uint128 highest; 
         uint128 lowest; 
@@ -15,6 +15,13 @@ contract PriceManager {
 
     mapping(uint24 => DecliningPrice) internal decliningPrices;
     mapping(uint24 => uint128) internal fixedPrices;
+
+modifier onlyManager{
+    require(msg.sender == manager, "u not owner");
+    
+    _;
+
+}
 
     function price(PriceType priceType_, uint24 saleId_)
         internal
